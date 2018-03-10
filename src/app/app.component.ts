@@ -14,6 +14,7 @@ interface WorksheetProblem {
 export class AppComponent implements OnInit {
   title = 'app';
   problems = [];
+  listeningMode = false;
 
   numberMap = {
     1: '一',
@@ -45,6 +46,10 @@ export class AppComponent implements OnInit {
     // Show worksheet problems
     this.problems = problems;
     console.log(this.problems);
+
+    // Call this function to make sure voices are loaded before
+    // user plays them.
+    speechSynthesis.getVoices();
   }
 
   onClickProblem(problemIndex: number) {
@@ -64,12 +69,30 @@ export class AppComponent implements OnInit {
     });
   }
 
+  onClickListeningModeToggle() {
+    this.listeningMode = !this.listeningMode;
+  }
+
+  onClickProblemPlayButton(problemIndex: number) {
+    let problem = this.problems[problemIndex];
+    this.playKanjiSpeech(problem.question);
+  }
+
   generateRandomNumbers(max: number, size: number): number[] {
     // initialize array
     let randArray = new Array(size).fill(0);
     // populate array with random numbers
     randArray = randArray.map(() => Math.floor(max * Math.random()))
     return randArray;
+  }
+
+  // Put this in its own service?
+  playKanjiSpeech(kanjiString: string) {
+    var msg = new SpeechSynthesisUtterance(kanjiString);
+    // Get a japanese voice
+    msg.voice = speechSynthesis.getVoices().filter((v) => v.lang === 'ja-JP')[0];
+    console.log(msg.voice);
+    window.speechSynthesis.speak(msg);
   }
 
   // Assumes number is less than 10,000,000 because I don't

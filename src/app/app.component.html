@@ -10,10 +10,12 @@
   <button (click)="onClickHideAnswers()">
       Hide all Answers
     </button>
+  <button (click)="onClickListeningModeToggle()">Toggle Listening Mode</button>
 </div>
-<ol>
-  <li class="worksheet-problem" *ngFor="let problem of problems;let i = index" (click)="onClickProblem(i)">
-    {{ problem.question }}
+<ol class="reading-mode">
+  <li class="worksheet-problem" *ngFor="let problem of problems;let i = index">
+    <button *ngIf="listeningMode" (click)="onClickProblemPlayButton(i)">Play Sound</button>
+    <span (click)="onClickProblem(i)">{{ problem.question }}</span>
     <span *ngIf="problem.answerVisible">- {{ problem.answer }}</span>
   </li>
 </ol>
