@@ -6,8 +6,10 @@
 # testing
 /coverage
 
+# NOTE: Checking in build folder to make it easier to deploy to github pages
+# See: https://gist.github.com/cobyism/4730490
 # production
-/build
+# /build
 
 # misc
 .DS_Store
