@@ -53,7 +53,6 @@ class App extends React.Component<{}, IAppComponentState> {
 
     // Show worksheet problems
     this.setState({ problems });
-    window.console.log(problems);
 
     // Call this function to make sure voices are loaded before
     // user plays them.
@@ -163,7 +162,7 @@ class App extends React.Component<{}, IAppComponentState> {
 
   private renderWorksheetProblem(listeningMode: boolean, problem: IWorksheetProblem, index: number) {
     return (
-      <Card>
+      <Card key={index}>
         <CardContent>
           <span onClick={() => this.onClickProblem(index)}>{ problem.question }</span>
           { this.renderProblemAnswer(problem) }
