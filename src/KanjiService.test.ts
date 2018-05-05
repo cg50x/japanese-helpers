@@ -1,4 +1,4 @@
-import { convertNumberToKanji, kanjiNumberMap } from './KanjiService';
+import { convertNumberToKanji } from './KanjiService';
 
 describe('KanjiService', () => {
 	describe('convertNumberToKanji', () => {
@@ -39,8 +39,7 @@ describe('KanjiService', () => {
 				{input: 66, expected: '六十六'},
 				{input: 77, expected: '七十七'},
 				{input: 88, expected: '八十八'},
-				{input: 99, expected: '九十九'},
-				
+				{input: 99, expected: '九十九'}
 			];
 			
 			tests.forEach((test) => {
@@ -50,12 +49,12 @@ describe('KanjiService', () => {
 		});
 		it('works with numbers between 100 and 999', () => {
 			const tests = [
-				{input: 100, expected: '百'}
+				{input: 100, expected: '百'},
 				{input: 101, expected: '百一'},
 				{input: 123, expected: '百二十三'},
 				{input: 202, expected: '二百二'},
 				{input: 333, expected: '三百三十三'},
-				{input: 999, expected: '九百九十九'},
+				{input: 999, expected: '九百九十九'}
 			];
 			
 			tests.forEach((test) => {
@@ -65,12 +64,12 @@ describe('KanjiService', () => {
 		});
 		it('works with numbers between 1000 and 9,999', () => {
 			const tests = [
-				{input: 1000, expected: '千'}
+				{input: 1000, expected: '千'},
 				{input: 1001, expected: '千一'},
 				{input: 1234, expected: '千二百三十四'},
 				{input: 5678, expected: '五千六百七十八'},
 				{input: 8421, expected: '八千四百二十一'},
-				{input: 9999, expected: '九千九百九十九'},
+				{input: 9999, expected: '九千九百九十九'}
 			];
 			
 			tests.forEach((test) => {
@@ -80,12 +79,12 @@ describe('KanjiService', () => {
 		});
 		it('works with numbers between 10,000 and 9,999,999', () => {
 			const tests = [
-				{input: 10000, expected: '一万'}
+				{input: 10000, expected: '一万'},
 				{input: 10001, expected: '一万一'},
 				{input: 123456, expected: '十二万三千四百五十六'},
 				{input: 1234567, expected: '百二十三万四千五百六十七'},
 				{input: 9282928, expected: '九百二十八万二千九百二十八'},
-				{input: 9999999, expected: '九百九十九万九千九百九十九'},
+				{input: 9999999, expected: '九百九十九万九千九百九十九'}
 			];
 			
 			tests.forEach((test) => {
