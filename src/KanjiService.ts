@@ -1,5 +1,5 @@
 
-export const kanjiNumberMap = {
+const kanjiNumberMap = {
     1: '一',
     2: '二',
     3: '三',
@@ -45,7 +45,7 @@ export function convertNumberToKanji(inputNum: number): string {
         if (manValue > 1) {
             result += convertNumberToKanji(manValue) + '万';
         } else if (manValue === 1) {
-            result += '万';
+            result += '一万';
         }
         currNum = currNum % 10000
     }
@@ -91,8 +91,7 @@ export function convertNumberToKanji(inputNum: number): string {
         result += kanjiNumberMap[currNum];
         currNum = 0;
     } else if (result.length === 0) {
-        // If the number is just zero, then print 0
-        result += '0';
+        result += 'ぜろ';
     }
 
     return result;
