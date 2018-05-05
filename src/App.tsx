@@ -1,3 +1,7 @@
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import Button from 'material-ui/Button';
+import Card, { CardContent } from 'material-ui/Card';
+import IconButton from 'material-ui/IconButton';
 import * as React from 'react';
 import './App.css';
 
@@ -10,51 +14,31 @@ interface IWorksheetProblem {
 interface IAppComponentState {
   problems: IWorksheetProblem[];
   listeningMode: boolean;
-  numberMap: {
-    [value:number]: string;
-  };
 }
 
-class App extends React.Component<{}, IAppComponentState> {
+const kanjiNumberMap = {
+  1: '一',
+  2: '二',
+  3: '三',
+  4: '四',
+  5: '五',
+  6: '六',
+  7: '七',
+  8: '八',
+  9: '九',
+  10: '十',
+  100: '百',
+  1000: '千',
+  10000: '万'
+};
 
-  // private problems: IWorksheetProblem[] = [];
-  // private listeningMode: boolean = false;
-  private numberMap = {
-    1: '一',
-    2: '二',
-    3: '三',
-    4: '四',
-    5: '五',
-    6: '六',
-    7: '七',
-    8: '八',
-    9: '九',
-    10: '十',
-    100: '百',
-    1000: '千',
-    10000: '万'
-  };
+class App extends React.Component<{}, IAppComponentState> {
 
   constructor(props: {}, ctx?: {}) {
     super(props, ctx);
 
     this.state = {
       listeningMode: false,
-      numberMap: {
-        1: '一',
-        2: '二',
-        3: '三',
-        4: '四',
-        5: '五',
-        6: '六',
-        7: '七',
-        8: '八',
-        9: '九',
-        10: '十',
-        100: '百',
-        1000: '千',
-        10000: '万'
-      },
       problems: []
     };
 
@@ -75,13 +59,12 @@ class App extends React.Component<{}, IAppComponentState> {
     // Generate random numbers
     const randNums = this.generateRandomNumbers(1000, 30);
     // Map random numbers to WorksheetProblem
-    const problems = randNums.map((inputNum) => {
-      return {
-        answer: inputNum.toString(),
-        answerVisible: false,
-        question: this.convertNumberToKanji(inputNum)
-      };
-    });
+    const problems = randNums.map((inputNum) => ({
+      answer: inputNum.toString(),
+      answerVisible: false,
+      question: this.convertNumberToKanji(inputNum)
+    }));
+
     // Show worksheet problems
     this.setState({ problems });
     window.console.log(problems);
@@ -96,34 +79,33 @@ class App extends React.Component<{}, IAppComponentState> {
   // ====================================================
 
   public onClickProblem(problemIndex: number) {
-    const problems = this.state.problems;
-    const visibility = problems[problemIndex].answerVisible;
-    problems[problemIndex].answerVisible = !visibility;
-    this.setState({ problems });
+    this.setState((prevState) => ({
+      ...prevState,
+      problems: prevState.problems.map(
+        (prob, idx) => idx === problemIndex ? { ...prob, answerVisible: !prob.answerVisible } : prob
+      )
+    }));
   }
 
   public onClickShowAnswers() {
-    this.state.problems.forEach((problem) => {
-      problem.answerVisible = true;
-    });
-    this.setState({
-      problems: this.state.problems
-    });
+    this.setState((prevState) => ({
+      ...prevState,
+      problems: prevState.problems.map((problem) => ({ ...problem, answerVisible: true }))
+    }));
   }
 
   public onClickHideAnswers() {
-    this.state.problems.forEach((problem) => {
-      problem.answerVisible = false;
-    });
-    this.setState({
-      problems: this.state.problems
-    });
+    this.setState((prevState) => ({
+      ...prevState,
+      problems: prevState.problems.map((problem) => ({ ...problem, answerVisible: false }))
+    }));
   }
 
   public onClickListeningModeToggle() {
-    this.setState({
-      listeningMode: !this.state.listeningMode
-    });
+    this.setState((prevState) => ({
+      ...prevState,
+      listeningMode: !prevState.listeningMode
+    }));
   }
 
   public onClickProblemPlayButton(problemIndex: number) {
@@ -237,7 +219,7 @@ class App extends React.Component<{}, IAppComponentState> {
 
     // Checking for ones
     if (currNum > 0) {
-      result += this.numberMap[currNum];
+      result += kanjiNumberMap[currNum];
       currNum = 0;
     } else if (result.length === 0) {
       // If the number is just zero, then print 0
@@ -257,13 +239,15 @@ class App extends React.Component<{}, IAppComponentState> {
         <header className="App-header">
           <h1 className="App-title">Kanji Numbers Practice</h1>
           <p>Click on each number to show/hide the answer</p>
-          <button onClick={this.onClickShowAnswers}>
+          <Button onClick={this.onClickShowAnswers} variant="raised" color="primary">
             Show all Answers
-          </button>
-          <button onClick={this.onClickHideAnswers}>
+          </Button>
+          <Button onClick={this.onClickHideAnswers} variant="raised" color="primary">
               Hide all Answers
-            </button>
-          <button onClick={this.onClickListeningModeToggle}>Toggle Listening Mode</button>
+            </Button>
+          <Button onClick={this.onClickListeningModeToggle} variant="raised" color="primary">
+            Toggle Listening Mode
+          </Button>
         </header>
         <ol className="reading-mode">
           {this.state.problems.map((problem, index) => {
@@ -276,17 +260,26 @@ class App extends React.Component<{}, IAppComponentState> {
 
   private renderWorksheetProblem(listeningMode: boolean, problem: IWorksheetProblem, index: number) {
     return (
-      <li className="worksheet-problem" key={index}>
-        { this.renderPlaySoundButton(listeningMode, index) }
-        <span onClick={() => this.onClickProblem(index)}>{ problem.question }</span>
-        { this.renderProblemAnswer(problem) }
-      </li>
+      <Card>
+        <CardContent>
+          <span onClick={() => this.onClickProblem(index)}>{ problem.question }</span>
+          { this.renderProblemAnswer(problem) }
+        </CardContent>
+        <div>
+          { this.renderPlaySoundButton(listeningMode, index) }
+        </div>
+      </Card>
     );
   }
   
   private renderPlaySoundButton(listeningMode: boolean, problemIndex: number) {
     return (
-      listeningMode ? <button onClick={() => this.onClickProblemPlayButton(problemIndex)}>Play Sound</button> : null
+      listeningMode ? 
+        <IconButton onClick={() => this.onClickProblemPlayButton(problemIndex)}>
+          <PlayArrowIcon />
+        </IconButton>
+        : 
+        null
     );
   }
 
