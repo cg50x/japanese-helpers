@@ -13,3 +13,21 @@
 .App-intro {
   font-size: large;
 }
+
+.Number-Listening-Body {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+
+  width: 75%;
+  margin: 0 auto;
+}
+
+.Number-Listening-Card {
+  flex: 0 200px;
+  margin: 10px 0 10px;
+}
+
+.Number-Listening-Card .answer {
+  transition: opacity .1s ease-in;
+}
