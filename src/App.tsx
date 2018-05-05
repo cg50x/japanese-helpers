@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import './App.css';
 import { convertNumberToKanji } from './KanjiService';
+import { getSpeechSynthesis, speakJapanese } from './TextToSpeechService';
 
 interface IWorksheetProblem {
   question: string;
@@ -56,7 +57,7 @@ class App extends React.Component<{}, IAppComponentState> {
 
     // Call this function to make sure voices are loaded before
     // user plays them.
-    this.getSpeechSynthesis().getVoices();
+    getSpeechSynthesis().getVoices();
   }
 
   // ====================================================
@@ -95,24 +96,12 @@ class App extends React.Component<{}, IAppComponentState> {
 
   public onClickProblemPlayButton(problemIndex: number) {
     const problem = this.state.problems[problemIndex];
-    this.playKanjiSpeech(problem.question);
+    speakJapanese(problem.question);
   }
 
   // ====================================================
   // HELPER FUNCTIONS
   // ====================================================
-
-  // Put this in its own service?
-  public getSpeechSynthesis(): any {
-    if (!window.speechSynthesis) {
-      // If speechSynthesis API is unavailable, use an object with noop methods.
-      return {
-        getVoices: () => [],
-        speak: () => undefined
-      };
-    }
-    return window.speechSynthesis;
-  }
 
   public generateRandomNumbers(max: number, size: number): number[] {
     // initialize array
@@ -120,15 +109,6 @@ class App extends React.Component<{}, IAppComponentState> {
     // populate array with random numbers
     randArray = randArray.map(() => Math.floor(max * Math.random()))
     return randArray;
-  }
-
-  // Put this in its own service?
-  public playKanjiSpeech(kanjiString: string) {
-    const msg = new SpeechSynthesisUtterance(kanjiString);
-    // Get a japanese voice
-    msg.voice = this.getSpeechSynthesis().getVoices().filter((v: any) => v.lang === 'ja-JP')[0];
-    window.console.log(msg.voice);
-    this.getSpeechSynthesis().speak(msg);
   }
 
   // ====================================================
